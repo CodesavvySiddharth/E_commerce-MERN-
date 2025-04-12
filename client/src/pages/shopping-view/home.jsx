@@ -28,6 +28,7 @@ import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "@/components/ui/use-toast";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import { getFeatureImages } from "@/store/common-slice";
+import BannerSlider from "@/components/shopping-view/banner-slider";
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -46,7 +47,6 @@ const brandsWithIcon = [
   { id: "h&m", label: "H&M", icon: Heater },
 ];
 function ShoppingHome() {
-  const [currentSlide, setCurrentSlide] = useState(0);
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
@@ -99,14 +99,6 @@ function ShoppingHome() {
   }, [productDetails]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % bannerImages.length);
-    }, 5000); // Reduced from 15000 to 5000 for faster transitions
-
-    return () => clearInterval(timer);
-  }, [bannerImages]);
-
-  useEffect(() => {
     dispatch(
       fetchAllFilteredProducts({
         filterParams: {},
@@ -115,113 +107,33 @@ function ShoppingHome() {
     );
   }, [dispatch]);
 
-  console.log(productList, "productList");
-
   useEffect(() => {
     dispatch(getFeatureImages());
   }, [dispatch]);
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="relative w-full h-[500px] md:h-[650px] lg:h-[700px] overflow-hidden">
-        {/* Banner container */}
-        {bannerImages.map((slide, index) => (
-          <div 
-            key={index}
-            className={`${
-              index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
-            } absolute inset-0 transition-opacity duration-1000`}
-          >
-            <img
-              src={slide.image}
-              alt={`Banner slide ${index + 1}`}
-              className="w-full h-full object-cover object-center"
-            />
-            {/* Overlay for better text visibility if needed */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/15 to-transparent"></div>
-            
-            {/* Content overlay - only add if you want to overlay text on the banners */}
-            <div className="absolute bottom-20 left-10 md:left-20 max-w-xl">
-              <div className="space-y-4 bg-white/20 backdrop-blur-sm p-6 rounded-lg shadow-lg">
-                <h2 className="text-3xl md:text-4xl font-bold text-white drop-shadow-md">
-                  Trending Collection
-                </h2>
-                <p className="text-lg text-white/90 drop-shadow">
-                  Discover the latest fashion trends for this season
-                </p>
-                <Button 
-                  onClick={() => navigate('/shop/listing')}
-                  className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-md shadow-md transition"
-                >
-                  Shop Now
-                </Button>
-              </div>
-            </div>
-          </div>
-        ))}
-        
-        {/* Navigation controls */}
-        <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 flex justify-between items-center px-4 z-20">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() =>
-              setCurrentSlide(
-                (prevSlide) =>
-                  (prevSlide - 1 + bannerImages.length) %
-                  bannerImages.length
-              )
-            }
-            className="bg-white/80 hover:bg-white border-none shadow-lg rounded-full h-10 w-10"
-          >
-            <ChevronLeftIcon className="h-5 w-5" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() =>
-              setCurrentSlide(
-                (prevSlide) => (prevSlide + 1) % bannerImages.length
-              )
-            }
-            className="bg-white/80 hover:bg-white border-none shadow-lg rounded-full h-10 w-10"
-          >
-            <ChevronRightIcon className="h-5 w-5" />
-          </Button>
-        </div>
-        
-        {/* Slide indicators */}
-        <div className="absolute bottom-6 inset-x-0 flex justify-center space-x-3 z-20">
-          {bannerImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`transition-all duration-300 ${
-                index === currentSlide 
-                  ? "w-8 bg-primary" 
-                  : "w-3 bg-white/70 hover:bg-white/90"
-              } h-3 rounded-full shadow-md`}
-              aria-label={`Go to slide ${index + 1}`}
-            ></button>
-          ))}
-        </div>
-      </div>
-      <section className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
+      {/* Using the new BannerSlider component */}
+      <BannerSlider banners={bannerImages} interval={5000} autoPlay={true} />
+
+      <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+        <div className="container mx-auto px-4 md:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 relative after:content-[''] after:absolute after:w-24 after:h-1 after:bg-primary after:bottom-[-10px] after:left-1/2 after:transform after:translate-x-[-50%]">
             Shop by category
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {categoriesWithIcon.map((categoryItem) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+            {categoriesWithIcon.map((categoryItem, index) => (
               <Card
+                key={index}
                 onClick={() =>
                   handleNavigateToListingPage(categoryItem, "category")
                 }
-                className="cursor-pointer hover:shadow-lg transition-shadow"
+                className="cursor-pointer group overflow-hidden bg-white border-none shadow-md hover:shadow-xl transition-all duration-300"
               >
-                <CardContent className="flex flex-col items-center justify-center p-6">
-                  <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />
-                  <span className="font-bold">{categoryItem.label}</span>
+                <CardContent className="flex flex-col items-center justify-center p-6 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                  <categoryItem.icon className="w-12 h-12 mb-4 text-primary group-hover:scale-110 transition-transform duration-300" />
+                  <span className="font-bold text-gray-800 group-hover:text-primary transition-colors duration-300">{categoryItem.label}</span>
                 </CardContent>
               </Card>
             ))}
@@ -229,18 +141,22 @@ function ShoppingHome() {
         </div>
       </section>
 
-      <section className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">Shop by Brand</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {brandsWithIcon.map((brandItem) => (
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4 md:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 relative after:content-[''] after:absolute after:w-24 after:h-1 after:bg-primary after:bottom-[-10px] after:left-1/2 after:transform after:translate-x-[-50%]">
+            Shop by Brand
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+            {brandsWithIcon.map((brandItem, index) => (
               <Card
+                key={index}
                 onClick={() => handleNavigateToListingPage(brandItem, "brand")}
-                className="cursor-pointer hover:shadow-lg transition-shadow"
+                className="cursor-pointer group overflow-hidden bg-white border-none shadow-md hover:shadow-xl transition-all duration-300"
               >
-                <CardContent className="flex flex-col items-center justify-center p-6">
-                  <brandItem.icon className="w-12 h-12 mb-4 text-primary" />
-                  <span className="font-bold">{brandItem.label}</span>
+                <CardContent className="flex flex-col items-center justify-center p-6 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                  <brandItem.icon className="w-12 h-12 mb-4 text-primary group-hover:scale-110 transition-transform duration-300" />
+                  <span className="font-bold text-gray-800 group-hover:text-primary transition-colors duration-300">{brandItem.label}</span>
                 </CardContent>
               </Card>
             ))}
@@ -248,15 +164,16 @@ function ShoppingHome() {
         </div>
       </section>
 
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
+      <section className="py-16 bg-gradient-to-b from-white to-gray-50">
+        <div className="container mx-auto px-4 md:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 relative after:content-[''] after:absolute after:w-24 after:h-1 after:bg-primary after:bottom-[-10px] after:left-1/2 after:transform after:translate-x-[-50%]">
             Feature Products
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
             {productList && productList.length > 0
               ? productList.map((productItem) => (
                   <ShoppingProductTile
+                    key={productItem._id}
                     handleGetProductDetails={handleGetProductDetails}
                     product={productItem}
                     handleAddtoCart={handleAddtoCart}

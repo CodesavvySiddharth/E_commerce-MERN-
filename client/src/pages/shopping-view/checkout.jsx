@@ -96,33 +96,76 @@ function ShoppingCheckout() {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="relative h-[300px] w-full overflow-hidden">
-        <img src={img} className="h-full w-full object-cover object-center" />
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 p-5">
-        <Address
-          selectedId={currentSelectedAddress}
-          setCurrentSelectedAddress={setCurrentSelectedAddress}
+    <div className="flex flex-col min-h-screen">
+      <div className="relative h-[250px] w-full overflow-hidden">
+        <img 
+          src={img} 
+          className="h-full w-full object-cover object-center" 
+          alt="Checkout header" 
         />
-        <div className="flex flex-col gap-4">
-          {cartItems && cartItems.items && cartItems.items.length > 0
-            ? cartItems.items.map((item) => (
-                <UserCartItemsContent key={item.productId} cartItem={item} />
-              ))
-            : null}
-          <div className="mt-8 space-y-4">
-            <div className="flex justify-between">
-              <span className="font-bold">Total</span>
-              <span className="font-bold">${totalCartAmount}</span>
-            </div>
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+          <h1 className="text-white text-3xl md:text-4xl font-bold tracking-tight drop-shadow-md">
+            Checkout
+          </h1>
+        </div>
+      </div>
+      
+      <div className="container mx-auto max-w-7xl px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-5">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold mb-6 pb-2 border-b">Shipping Address</h2>
+            <Address
+              selectedId={currentSelectedAddress}
+              setCurrentSelectedAddress={setCurrentSelectedAddress}
+            />
           </div>
-          <div className="mt-4 w-full">
-            <Button onClick={handleInitiatePaypalPayment} className="w-full">
-              {isPaymentStart
-                ? "Processing Paypal Payment..."
-                : "Checkout with Paypal"}
-            </Button>
+          
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold mb-6 pb-2 border-b">Order Summary</h2>
+            <div className="flex flex-col gap-4 max-h-[400px] overflow-y-auto pr-2">
+              {cartItems && cartItems.items && cartItems.items.length > 0
+                ? cartItems.items.map((item) => (
+                    <UserCartItemsContent key={item.productId} cartItem={item} />
+                  ))
+                : (
+                  <div className="flex flex-col items-center justify-center py-8 text-center">
+                    <p className="text-muted-foreground">Your cart is empty</p>
+                  </div>
+                )}
+            </div>
+            
+            <div className="mt-8 space-y-4 border-t pt-4">
+              <div className="flex justify-between">
+                <span className="font-medium text-muted-foreground">Subtotal</span>
+                <span className="font-medium">${totalCartAmount.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-muted-foreground">Shipping</span>
+                <span className="font-medium">Free</span>
+              </div>
+              <div className="flex justify-between border-t pt-4">
+                <span className="font-bold text-lg">Total</span>
+                <span className="font-bold text-lg">${totalCartAmount.toFixed(2)}</span>
+              </div>
+            </div>
+            
+            <div className="mt-6 w-full">
+              <Button 
+                onClick={handleInitiatePaypalPayment} 
+                className="w-full py-6 text-lg font-semibold transition-transform duration-200 hover:scale-[1.02]"
+                disabled={isPaymentStart || !cartItems?.items?.length || currentSelectedAddress === null}
+              >
+                {isPaymentStart
+                  ? "Processing Paypal Payment..."
+                  : "Checkout with Paypal"}
+              </Button>
+              
+              {currentSelectedAddress === null && (
+                <p className="text-sm text-red-500 mt-2 text-center">
+                  Please select a shipping address
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>

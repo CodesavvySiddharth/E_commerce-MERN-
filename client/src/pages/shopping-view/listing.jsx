@@ -20,6 +20,7 @@ import { ArrowUpDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import { ShoppingBag } from "lucide-react";
 
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
@@ -146,21 +147,25 @@ function ShoppingListing() {
   console.log(productList, "productListproductListproductList");
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
+    <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-6 p-4 md:p-6 lg:p-8 bg-gray-50">
       <ProductFilter filters={filters} handleFilter={handleFilter} />
-      <div className="bg-background w-full rounded-lg shadow-sm">
-        <div className="p-4 border-b flex items-center justify-between">
-          <h2 className="text-lg font-extrabold">All Products</h2>
-          <div className="flex items-center gap-3">
-            <span className="text-muted-foreground">
+      <div className="bg-white w-full rounded-lg shadow-md">
+        <div className="p-4 md:p-6 border-b flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h2 className="text-xl font-extrabold text-gray-800 flex items-center">
+            <span className="relative mr-2 after:content-[''] after:absolute after:w-full after:h-1 after:bg-primary/30 after:bottom-0 after:left-0">
+              All Products
+            </span>
+            <span className="text-sm font-normal text-muted-foreground ml-2 bg-gray-100 px-2 py-1 rounded-full">
               {productList?.length} Products
             </span>
+          </h2>
+          <div className="flex items-center gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1 hover:bg-primary/5 transition-colors duration-200 border-gray-200 hover:border-primary/20 shadow-sm"
                 >
                   <ArrowUpDownIcon className="h-4 w-4" />
                   <span>Sort by</span>
@@ -172,6 +177,7 @@ function ShoppingListing() {
                     <DropdownMenuRadioItem
                       value={sortItem.id}
                       key={sortItem.id}
+                      className="cursor-pointer hover:bg-primary/5"
                     >
                       {sortItem.label}
                     </DropdownMenuRadioItem>
@@ -181,17 +187,25 @@ function ShoppingListing() {
             </DropdownMenu>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-          {productList && productList.length > 0
-            ? productList.map((productItem) => (
-                <ShoppingProductTile
-                  key={productItem._id}
-                  handleGetProductDetails={handleGetProductDetails}
-                  product={productItem}
-                  handleAddtoCart={handleAddtoCart}
-                />
-              ))
-            : null}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 md:p-6">
+          {productList && productList.length > 0 ? (
+            productList.map((productItem) => (
+              <ShoppingProductTile
+                key={productItem._id}
+                handleGetProductDetails={handleGetProductDetails}
+                product={productItem}
+                handleAddtoCart={handleAddtoCart}
+              />
+            ))
+          ) : (
+            <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <ShoppingBag className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900">No products found</h3>
+              <p className="text-sm text-muted-foreground mt-1">Try changing your filter options</p>
+            </div>
+          )}
         </div>
       </div>
       <ProductDetailsDialog
