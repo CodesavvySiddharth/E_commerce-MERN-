@@ -18,6 +18,7 @@ import {
   resetOrderDetails,
 } from "@/store/admin/order-slice";
 import { Badge } from "../ui/badge";
+import { Info } from "lucide-react";
 
 function AdminOrdersView() {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
@@ -39,19 +40,19 @@ function AdminOrdersView() {
   }, [orderDetails]);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>All Orders</CardTitle>
+    <Card className="shadow-sm hover:shadow-md transition-all duration-300">
+      <CardHeader className="bg-background border-b">
+        <CardTitle className="text-2xl font-bold text-primary">All Orders</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-muted/30">
             <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Order Date</TableHead>
-              <TableHead>Order Status</TableHead>
-              <TableHead>Order Price</TableHead>
-              <TableHead>
+              <TableHead className="font-semibold">Order ID</TableHead>
+              <TableHead className="font-semibold">Order Date</TableHead>
+              <TableHead className="font-semibold">Order Status</TableHead>
+              <TableHead className="font-semibold">Order Price</TableHead>
+              <TableHead className="text-right font-semibold">
                 <span className="sr-only">Details</span>
               </TableHead>
             </TableRow>
@@ -59,24 +60,24 @@ function AdminOrdersView() {
           <TableBody>
             {orderList && orderList.length > 0
               ? orderList.map((orderItem) => (
-                  <TableRow>
-                    <TableCell>{orderItem?._id}</TableCell>
+                  <TableRow key={orderItem?._id} className="hover:bg-muted/20 transition-colors duration-200">
+                    <TableCell className="font-medium">{orderItem?._id}</TableCell>
                     <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
                     <TableCell>
                       <Badge
-                        className={`py-1 px-3 ${
+                        className={`py-1 px-3 transition-all ${
                           orderItem?.orderStatus === "confirmed"
-                            ? "bg-green-500"
+                            ? "bg-green-500 hover:bg-green-600"
                             : orderItem?.orderStatus === "rejected"
-                            ? "bg-red-600"
-                            : "bg-black"
+                            ? "bg-red-600 hover:bg-red-700"
+                            : "bg-yellow-500 hover:bg-yellow-600"
                         }`}
                       >
                         {orderItem?.orderStatus}
                       </Badge>
                     </TableCell>
-                    <TableCell>${orderItem?.totalAmount}</TableCell>
-                    <TableCell>
+                    <TableCell className="font-semibold">${orderItem?.totalAmount}</TableCell>
+                    <TableCell className="text-right">
                       <Dialog
                         open={openDetailsDialog}
                         onOpenChange={() => {
@@ -85,11 +86,14 @@ function AdminOrdersView() {
                         }}
                       >
                         <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-primary hover:text-primary"
                           onClick={() =>
                             handleFetchOrderDetails(orderItem?._id)
                           }
                         >
-                          View Details
+                          <Info className="h-4 w-4 mr-1" /> Details
                         </Button>
                         <AdminOrderDetailsView orderDetails={orderDetails} />
                       </Dialog>

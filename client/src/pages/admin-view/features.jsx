@@ -146,28 +146,40 @@ function AdminFeatures() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {allBannerImages.map((banner, index) => (
-                    <Card key={index} className="overflow-hidden group relative">
+                    <Card key={index} className="overflow-hidden group relative border border-muted/50 transition-all duration-300 hover:shadow-md hover:border-primary/30">
                       <CardContent className="p-0">
                         <div className="relative aspect-[16/6]">
                           <img
                             src={banner.image}
                             alt={`Banner ${index + 1}`}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           />
-                          {/* Banner info overlay */}
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white p-4">
-                            <span className="font-medium mb-2">Banner {index + 1}</span>
-                            <div className="flex gap-2">
-                              <Button variant="outline" size="sm" className="text-white border-white hover:bg-white/20">
+                          {/* Banner info overlay with improved styling */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center text-white p-4">
+                            <span className="font-medium mb-1 text-lg">{banner.title || `Banner ${index + 1}`}</span>
+                            {banner.description && (
+                              <p className="text-xs text-center mb-3 line-clamp-2 max-w-[90%] text-white/90">{banner.description}</p>
+                            )}
+                            <div className="flex gap-3">
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="text-white border-white/70 hover:bg-white/20 hover:border-white transition-colors duration-200"
+                                onClick={() => setCurrentPreview(index)}
+                              >
                                 Preview
                               </Button>
-                              <Button variant="destructive" size="sm">
-                                <Trash2 className="h-4 w-4" />
+                              <Button 
+                                variant="destructive" 
+                                size="sm"
+                                className="hover:bg-red-600/90 transition-colors duration-200"
+                              >
+                                <Trash2 className="h-4 w-4 mr-1" /> Remove
                               </Button>
                             </div>
                           </div>
-                          {/* Banner number badge */}
-                          <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                          {/* Banner number badge with improved styling */}
+                          <div className="absolute top-2 right-2 bg-black/70 text-white px-2.5 py-1 rounded-md text-xs backdrop-blur-sm shadow-md">
                             {index + 1}
                           </div>
                         </div>
@@ -190,60 +202,68 @@ function AdminFeatures() {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center space-y-6">
-              {/* Banner preview */}
-              <div className="relative w-full h-[300px] overflow-hidden rounded-lg">
+              {/* Banner preview with enhanced styling */}
+              <div className="relative w-full h-[350px] overflow-hidden rounded-lg shadow-md border border-muted/60">
                 <img
                   src={allBannerImages[currentPreview]?.image}
                   alt="Banner Preview"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-1000 ease-in-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/15 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-transparent"></div>
                 
-                {/* Sample overlay content */}
+                {/* Sample overlay content with improved styling */}
                 <div className="absolute bottom-6 left-6 max-w-[80%]">
-                  <div className="space-y-2 bg-white/20 backdrop-blur-sm p-4 rounded shadow">
-                    <h3 className="text-xl font-bold text-white drop-shadow">
-                      Trending Collection
+                  <div className="space-y-2 bg-black/40 backdrop-blur-md p-4 rounded-xl shadow-lg border border-white/10">
+                    <h3 className="text-xl font-bold text-white drop-shadow-lg">
+                      {allBannerImages[currentPreview]?.title || "Trending Collection"}
                     </h3>
-                    <p className="text-sm text-white/90 drop-shadow line-clamp-2">
-                      Discover the latest fashion trends for this season
+                    <p className="text-sm text-white/90 drop-shadow-lg line-clamp-2">
+                      {allBannerImages[currentPreview]?.description || "Discover the latest fashion trends for this season"}
                     </p>
+                    {allBannerImages[currentPreview]?.buttonText && (
+                      <Button 
+                        size="sm" 
+                        className="mt-2 bg-primary hover:bg-primary/90 text-white shadow-md transition-all duration-300 hover:translate-y-[-1px]"
+                      >
+                        {allBannerImages[currentPreview].buttonText}
+                      </Button>
+                    )}
                   </div>
                 </div>
                 
-                {/* Navigation controls */}
+                {/* Navigation controls with improved styling */}
                 <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 flex justify-between px-2">
                   <Button 
                     variant="outline" 
                     size="icon" 
                     onClick={prevPreview}
-                    className="bg-white/60 hover:bg-white border-none rounded-full h-8 w-8"
+                    className="bg-white/60 hover:bg-white/90 border-none rounded-full h-9 w-9 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110"
                   >
-                    <ChevronLeftIcon className="h-4 w-4" />
+                    <ChevronLeftIcon className="h-5 w-5" />
                   </Button>
                   <Button 
                     variant="outline" 
                     size="icon" 
                     onClick={nextPreview}
-                    className="bg-white/60 hover:bg-white border-none rounded-full h-8 w-8"
+                    className="bg-white/60 hover:bg-white/90 border-none rounded-full h-9 w-9 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110"
                   >
-                    <ChevronRightIcon className="h-4 w-4" />
+                    <ChevronRightIcon className="h-5 w-5" />
                   </Button>
                 </div>
               </div>
               
-              {/* Preview info */}
+              {/* Preview info with improved styling */}
               <div className="text-center w-full">
-                <div className="flex justify-center space-x-1 mb-2">
+                <div className="flex justify-center space-x-2 mb-2">
                   {allBannerImages.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentPreview(index)}
-                      className={`transition-all ${
+                      className={`transition-all duration-300 ${
                         index === currentPreview 
-                          ? "w-6 bg-primary" 
-                          : "w-2 bg-gray-300"
-                      } h-2 rounded-full`}
+                          ? "w-8 bg-primary shadow-md" 
+                          : "w-2.5 bg-gray-300 hover:bg-gray-400"
+                      } h-2.5 rounded-full hover:scale-110`}
                       aria-label={`View banner ${index + 1}`}
                     ></button>
                   ))}
@@ -253,10 +273,12 @@ function AdminFeatures() {
                 </p>
               </div>
               
-              {/* Tips */}
-              <div className="border rounded p-4 w-full bg-muted/30">
-                <h4 className="font-medium mb-2">Tips for Great Banners</h4>
-                <ul className="text-sm space-y-1 text-muted-foreground list-disc pl-4">
+              {/* Tips with improved styling */}
+              <div className="border rounded-lg p-5 w-full bg-muted/20 shadow-sm">
+                <h4 className="font-medium mb-3 text-primary flex items-center">
+                  <ImageIcon className="h-4 w-4 mr-2" /> Tips for Great Banners
+                </h4>
+                <ul className="text-sm space-y-2 text-muted-foreground list-disc pl-5">
                   <li>Use high-quality images (1920 × 600px recommended)</li>
                   <li>Choose images that match your brand identity</li>
                   <li>Ensure good contrast between text and background</li>

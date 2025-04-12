@@ -47,11 +47,24 @@ function AdminProducts() {
   function onSubmit(event) {
     event.preventDefault();
 
+    // Check if an image has been uploaded for a new product
+    if (currentEditedId === null && !uploadedImageUrl) {
+      toast({
+        title: "Image required",
+        description: "Please upload a product image before adding the product.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     currentEditedId !== null
       ? dispatch(
           editProduct({
             id: currentEditedId,
-            formData,
+            formData: {
+              ...formData,
+              image: uploadedImageUrl || formData.image, // Use uploaded image or keep existing
+            },
           })
         ).then((data) => {
           console.log(data, "edit");
@@ -61,6 +74,10 @@ function AdminProducts() {
             setFormData(initialFormData);
             setOpenCreateProductsDialog(false);
             setCurrentEditedId(null);
+            setUploadedImageUrl(null); // Reset uploaded image
+            toast({
+              title: "Product updated successfully",
+            });
           }
         })
       : dispatch(
@@ -73,9 +90,10 @@ function AdminProducts() {
             dispatch(fetchAllProducts());
             setOpenCreateProductsDialog(false);
             setImageFile(null);
+            setUploadedImageUrl(null); // Reset uploaded image
             setFormData(initialFormData);
             toast({
-              title: "Product add successfully",
+              title: "Product added successfully",
             });
           }
         });
