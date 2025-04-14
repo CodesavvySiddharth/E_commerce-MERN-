@@ -11,6 +11,9 @@ import {
 } from "@/store/shop/address-slice";
 import AddressCard from "./address-card";
 import { useToast } from "../ui/use-toast";
+import { PlusCircle } from "lucide-react";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
 
 const initialAddressFormData = {
   address: "",
@@ -23,6 +26,7 @@ const initialAddressFormData = {
 function Address({ setCurrentSelectedAddress, selectedId }) {
   const [formData, setFormData] = useState(initialAddressFormData);
   const [currentEditedId, setCurrentEditedId] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { addressList } = useSelector((state) => state.shopAddress);
@@ -53,6 +57,7 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
             dispatch(fetchAllAddresses(user?.id));
             setCurrentEditedId(null);
             setFormData(initialAddressFormData);
+            setShowAddForm(false);
             toast({
               title: "Address updated successfully",
             });
@@ -67,6 +72,7 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
           if (data?.payload?.success) {
             dispatch(fetchAllAddresses(user?.id));
             setFormData(initialAddressFormData);
+            setShowAddForm(false);
             toast({
               title: "Address added successfully",
             });
@@ -97,6 +103,7 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
       pincode: getCuurentAddress?.pincode,
       notes: getCuurentAddress?.notes,
     });
+    setShowAddForm(true);
   }
 
   function isFormValid() {
@@ -109,40 +116,81 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
     dispatch(fetchAllAddresses(user?.id));
   }, [dispatch]);
 
-  console.log(addressList, "addressList");
-
   return (
-    <Card>
-      <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2  gap-2">
-        {addressList && addressList.length > 0
-          ? addressList.map((singleAddressItem) => (
-              <AddressCard
-                key={singleAddressItem._id}
-                selectedId={selectedId}
-                handleDeleteAddress={handleDeleteAddress}
-                addressInfo={singleAddressItem}
-                handleEditAddress={handleEditAddress}
-                setCurrentSelectedAddress={setCurrentSelectedAddress}
-              />
-            ))
-          : null}
-      </div>
-      <CardHeader>
-        <CardTitle>
-          {currentEditedId !== null ? "Edit Address" : "Add New Address"}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <CommonForm
-          formControls={addressFormControls}
-          formData={formData}
-          setFormData={setFormData}
-          buttonText={currentEditedId !== null ? "Edit" : "Add"}
-          onSubmit={handleManageAddress}
-          isBtnDisabled={!isFormValid()}
-        />
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+      {addressList && addressList.length > 0 ? (
+        <div className="grid grid-cols-1 gap-4">
+          {addressList.map((singleAddressItem) => (
+            <AddressCard
+              key={singleAddressItem._id}
+              selectedId={selectedId}
+              handleDeleteAddress={handleDeleteAddress}
+              addressInfo={singleAddressItem}
+              handleEditAddress={handleEditAddress}
+              setCurrentSelectedAddress={setCurrentSelectedAddress}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-4 bg-muted/10 rounded-lg border border-dashed border-muted">
+          <p className="text-muted-foreground mb-2">No addresses found</p>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setShowAddForm(true)}
+            className="mt-2"
+          >
+            Add your first address
+          </Button>
+        </div>
+      )}
+
+      {addressList && addressList.length > 0 && addressList.length < 3 && !showAddForm && (
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => setShowAddForm(true)}
+          className="w-full flex items-center justify-center gap-2"
+        >
+          <PlusCircle className="h-4 w-4" />
+          <span>Add New Address</span>
+        </Button>
+      )}
+
+      {showAddForm && (
+        <Card className="mt-6">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">
+              {currentEditedId !== null ? "Edit Address" : "Add New Address"}
+            </CardTitle>
+            <Separator className="mt-2" />
+          </CardHeader>
+          <CardContent className="space-y-3 pt-4">
+            <CommonForm
+              formControls={addressFormControls}
+              formData={formData}
+              setFormData={setFormData}
+              buttonText={currentEditedId !== null ? "Save Changes" : "Add Address"}
+              onSubmit={handleManageAddress}
+              isBtnDisabled={!isFormValid()}
+            />
+            {!currentEditedId && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => {
+                  setShowAddForm(false);
+                  setFormData(initialAddressFormData);
+                }}
+                className="w-full mt-2"
+              >
+                Cancel
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 }
 

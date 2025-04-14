@@ -28,6 +28,9 @@ function ShoppingOrderDetailsView({ orderDetails }) {
     );
   }
 
+  // Log the orderDetails to debug
+  console.log('Order Details:', orderDetails);
+
   // Helper function to get payment status styling
   const getPaymentStatusStyles = (status) => {
     return status === "completed" 
@@ -45,11 +48,11 @@ function ShoppingOrderDetailsView({ orderDetails }) {
       case "pending":
         return "bg-yellow-500 hover:bg-yellow-600 transition-all";
       case "delivered":
-        return "bg-yellow-500 hover:bg-yellow-600 transition-all";
+        return "bg-green-500 hover:bg-green-600 transition-all";
       case "inProcess":
-        return "bg-yellow-500 hover:bg-yellow-600 transition-all";
+        return "bg-blue-500 hover:bg-blue-600 transition-all";
       case "inShipping":
-        return "bg-yellow-500 hover:bg-yellow-600 transition-all";
+        return "bg-indigo-500 hover:bg-indigo-600 transition-all";
       default:
         return "bg-slate-500 hover:bg-slate-600 transition-all";
     }
@@ -138,19 +141,19 @@ function ShoppingOrderDetailsView({ orderDetails }) {
       <div>
         <h3 className="text-sm font-medium mb-3 flex items-center gap-1.5">
           <Truck className="h-4 w-4 text-muted-foreground" />
-          Order Details ({orderDetails?.items?.length} items)
+          Order Details ({orderDetails?.cartItems?.length || 0} items)
         </h3>
 
         <div className="space-y-3 max-h-[250px] overflow-y-auto pr-2">
-          {orderDetails?.items?.map((item, index) => (
+          {orderDetails?.cartItems?.map((item, index) => (
             <div 
               key={index} 
               className="flex items-center gap-3 p-3 bg-muted/10 rounded-md border border-muted"
             >
               <div className="h-16 w-16 bg-muted/30 rounded-md overflow-hidden flex-shrink-0">
                 <img 
-                  src={item?.product?.imageUrl} 
-                  alt={item?.product?.name}
+                  src={item?.image} 
+                  alt={item?.title}
                   className="h-full w-full object-cover"
                   onError={(e) => {
                     e.target.src = "https://placehold.co/100x100/png?text=Product";
@@ -158,13 +161,13 @@ function ShoppingOrderDetailsView({ orderDetails }) {
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm truncate">{item?.product?.name}</p>
+                <p className="font-medium text-sm truncate">{item?.title}</p>
                 <div className="flex items-center justify-between mt-1">
                   <p className="text-xs text-muted-foreground">
                     Qty: {item?.quantity}
                   </p>
                   <p className="text-sm font-medium">
-                    ${parseFloat(item?.product?.price * item?.quantity).toFixed(2)}
+                    ${parseFloat(item?.price * item?.quantity).toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -184,14 +187,18 @@ function ShoppingOrderDetailsView({ orderDetails }) {
         
         <div className="bg-muted/10 p-3 rounded-md border border-muted">
           <address className="not-italic">
-            <p className="font-medium text-sm">{orderDetails?.shippingAddress?.fullName}</p>
-            <p className="text-sm text-muted-foreground">{orderDetails?.shippingAddress?.street}</p>
+            <p className="text-sm text-muted-foreground">{orderDetails?.addressInfo?.address}</p>
             <p className="text-sm text-muted-foreground">
-              {orderDetails?.shippingAddress?.city}, {orderDetails?.shippingAddress?.state}, {orderDetails?.shippingAddress?.zipCode}
+              {orderDetails?.addressInfo?.city}, {orderDetails?.addressInfo?.pincode}
             </p>
             <p className="text-sm text-muted-foreground mt-1">
-              <strong>Phone:</strong> {orderDetails?.shippingAddress?.phone}
+              <strong>Phone:</strong> {orderDetails?.addressInfo?.phone}
             </p>
+            {orderDetails?.addressInfo?.notes && (
+              <p className="text-sm text-muted-foreground mt-1">
+                <strong>Notes:</strong> {orderDetails?.addressInfo?.notes}
+              </p>
+            )}
           </address>
         </div>
       </div>
@@ -203,7 +210,7 @@ function ShoppingOrderDetailsView({ orderDetails }) {
           Estimated Delivery
         </h3>
         <p className="text-sm text-muted-foreground">
-          {orderDetails?.orderStatus === "confirmed" ? (
+          {orderDetails?.orderStatus === "confirmed" || orderDetails?.orderStatus === "delivered" ? (
             <span className="flex items-center gap-1.5">
               <CheckCircle className="h-4 w-4 text-green-500" />
               Your order will be delivered within 3-5 business days
@@ -235,3 +242,4 @@ function ShoppingOrderDetailsView({ orderDetails }) {
 }
 
 export default ShoppingOrderDetailsView;
+

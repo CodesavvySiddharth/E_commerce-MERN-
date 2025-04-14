@@ -121,23 +121,14 @@ function ShoppingOrders() {
                       ${parseFloat(orderItem?.totalAmount).toFixed(2)}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Dialog
-                        open={openDetailsDialog}
-                        onOpenChange={() => {
-                          setOpenDetailsDialog(false);
-                          dispatch(resetOrderDetails());
-                        }}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-primary hover:text-primary"
+                        onClick={() => handleFetchOrderDetails(orderItem?._id)}
                       >
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-primary hover:text-primary"
-                          onClick={() => handleFetchOrderDetails(orderItem?._id)}
-                        >
-                          <Info className="h-4 w-4 mr-1" /> Details
-                        </Button>
-                        <ShoppingOrderDetailsView orderDetails={orderDetails} />
-                      </Dialog>
+                        <Info className="h-4 w-4 mr-1" /> Details
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -162,6 +153,19 @@ function ShoppingOrders() {
           </div>
         )}
       </CardContent>
+      
+      {/* Order details dialog */}
+      <Dialog
+        open={openDetailsDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            setOpenDetailsDialog(false);
+            dispatch(resetOrderDetails());
+          }
+        }}
+      >
+        <ShoppingOrderDetailsView orderDetails={orderDetails} />
+      </Dialog>
     </Card>
   );
 }
