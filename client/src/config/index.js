@@ -1,28 +1,3 @@
-export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
-export const API_ENDPOINTS = {
-  auth: {
-    login: `${API_URL}/auth/login`,
-    register: `${API_URL}/auth/register`,
-    checkAuth: `${API_URL}/auth/check-auth`,
-    logout: `${API_URL}/auth/logout`,
-  },
-  shop: {
-    products: `${API_URL}/shop/products`,
-    cart: `${API_URL}/shop/cart`,
-    orders: `${API_URL}/shop/orders`,
-    search: `${API_URL}/shop/search`,
-  },
-  admin: {
-    products: `${API_URL}/admin/products`,
-    orders: `${API_URL}/admin/orders`,
-    features: `${API_URL}/admin/features`,
-  },
-  common: {
-    featureImage: `${API_URL}/common/feature-image`,
-  },
-};
-
 export const registerFormControls = [
   {
     name: "userName",

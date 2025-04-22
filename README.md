@@ -66,21 +66,21 @@ Shopnetic is a modern, full-stack e-commerce platform built with the MERN stack 
 ### Installation
 
 1. Clone the repository
-```bash
+   ```bash
 git clone [repository-url]
-cd mern-e-commerce
-```
+   cd mern-e-commerce
+   ```
 
 2. Install dependencies for both frontend and backend
-```bash
+   ```bash
 # Install backend dependencies
-cd server
-npm install
+   cd server
+   npm install
 
 # Install frontend dependencies
-cd ../client
-npm install
-```
+   cd ../client
+   npm install
+   ```
 
 3. Set up environment variables
 Create `.env` files in both client and server directories with necessary configurations.

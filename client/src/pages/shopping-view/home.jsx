@@ -158,7 +158,7 @@ function ShoppingHome() {
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-center">
               Shop by <span className="text-primary border-b-4 border-primary pb-1">Category</span>
-            </h2>
+          </h2>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-8">
