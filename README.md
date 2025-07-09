@@ -1,102 +1,62 @@
 # Shopnetic - MERN E-commerce Platform
 
-Shopnetic is a modern, full-stack e-commerce platform built with the MERN stack (MongoDB, Express.js, React.js, Node.js). It offers a seamless shopping experience with a beautiful UI and robust functionality.
+> **Admin Credentials**  
+> Email: admin@example.com  
+> Password: admin123
 
-## Features
+A modern e-commerce platform built with the MERN stack (MongoDB, Express.js, React.js, Node.js).
+
+## Key Features
 
 ### User Features
-- **Product Browsing**
-  - Browse products by categories (Men, Women, Kids, Footwear, Accessories)
-  - Search functionality with real-time results
-  - Product filtering and sorting options
-  - Detailed product views with images and descriptions
+- Browse products by categories
+- Search and filter products
+- Shopping cart and secure checkout
+- User account management
+- Order tracking
 
-- **Shopping Experience**
-  - User-friendly shopping cart
-  - Secure checkout process
-  - Multiple payment options
-  - Order tracking and history
+### Admin Panel
+- Product management (CRUD operations)
+- Order processing
+- Category management
+- Inventory control
 
-- **User Account**
-  - Personal account management
-  - Order history
-  - Saved addresses
-  - Wishlist functionality
+## Tech Stack
+- **Frontend**: React.js, Redux, Tailwind CSS
+- **Backend**: Node.js, Express.js, MongoDB
+- **Authentication**: JWT
 
-### Admin Features
-- **Product Management**
-  - Add, edit, and delete products
-  - Manage product categories
-  - Update product inventory
-
-- **Order Management**
-  - View and process orders
-  - Update order status
-  - Order analytics
-
-### Technical Features
-- Responsive design for all devices
-- Modern UI with Tailwind CSS
-- Real-time updates
-- Secure authentication
-- RESTful API architecture
-
-## Technology Stack
-
-### Frontend
-- React.js
-- Redux for state management
-- Tailwind CSS for styling
-- React Router for navigation
-- Lucide React for icons
-
-### Backend
-- Node.js
-- Express.js
-- MongoDB
-- JWT for authentication
-
-## Getting Started
-
-### Prerequisites
-- Node.js (v14 or higher)
-- MongoDB
-- npm or yarn
-
-### Installation
+## Quick Start
 
 1. Clone the repository
    ```bash
-git clone [repository-url]
+   git clone [repository-url]
    cd mern-e-commerce
    ```
 
-2. Install dependencies for both frontend and backend
+2. Install dependencies
    ```bash
-# Install backend dependencies
+   # Backend
    cd server
    npm install
-
-# Install frontend dependencies
+   
+   # Frontend
    cd ../client
    npm install
    ```
 
-3. Set up environment variables
-Create `.env` files in both client and server directories with necessary configurations.
-
-4. Start the development servers
-```bash
-# Start backend server
-cd server
-npm run dev
-
-# Start frontend server
-cd ../client
-npm run dev
-```
+3. Start the application
+   ```bash
+   # In server directory
+   npm run dev
+   
+   # In client directory (new terminal)
+   npm start
+   ```
 
 ### Environment Variables
+
+Create `.env` files in both `client` and `server` directories with required configurations.
 
 #### Backend (.env)
 ```
