@@ -67,7 +67,7 @@ JWT_SECRET=your_jwt_secret
 
 #### Frontend (.env)
 ```
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=https://e-commerce-mern-hjad.onrender.com/api
 ```
 
 ## Project Structure
