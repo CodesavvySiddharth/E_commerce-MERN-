@@ -28,10 +28,25 @@ mongoose
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const allowedOrigins = [
+  'https://tubular-kitsune-9f9624.netlify.app', // Your Netlify domain
+  'http://localhost:5173', // Local development
+  'https://e-commerce-mern-hjad.onrender.com' // Your Render domain
+];
+
 app.use(
   cors({
-    origin: "https://e-commerce-mern-hjad.onrender.com",
-    methods: ["GET", "POST", "DELETE", "PUT"],
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+    methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
     allowedHeaders: [
       "Content-Type",
       "Authorization",
@@ -40,6 +55,7 @@ app.use(
       "Pragma",
     ],
     credentials: true,
+    optionsSuccessStatus: 200 // Some legacy browsers choke on 204
   })
 );
 
