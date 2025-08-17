@@ -29,6 +29,7 @@ router.get("/order/debug-paypal", async (req, res) => {
       redirect_urls: {
         return_url: "http://localhost:5173/shop/paypal-return",
         cancel_url: "http://localhost:5173/shop/paypal-cancel",
+
       },
       transactions: [
         {
